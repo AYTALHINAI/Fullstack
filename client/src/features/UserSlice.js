@@ -6,7 +6,7 @@ export const getUser = createAsyncThunk(
   async (udata, { rejectWithValue }) => {
     try {
       const response = await axios.post("http://localhost:5000/login", udata);
-      return response.data; 
+      return response.data;
     } catch (error) {
       const msg = error?.response?.data?.message || "Login failed.";
       return rejectWithValue(msg);
@@ -19,11 +19,11 @@ export const addUser = createAsyncThunk(
   async (udata, { rejectWithValue }) => {
     try {
       const response = await axios.post("http://localhost:5000/register", udata);
-      return response.data.message; 
+      return response.data.message;
     } catch (error) {
       const msg =
         error?.response?.data?.message || "Registration failed.";
-      return rejectWithValue(msg); 
+      return rejectWithValue(msg);
     }
   }
 );
@@ -54,14 +54,19 @@ export const UserSlice = createSlice({
   initialState: initVal,
   reducers: {
     logout: (state) => {
-        state.user = null;
-        state.isSuccess = false;
-        state.isError = false;
+      state.user = null;
+      state.isSuccess = false;
+      state.isError = false;
+    },
+    resetState: (state) => {
+      state.isSuccess = false;
+      state.isError = false;
+      state.message = "";
     }
   },
   extraReducers: (builder) => {
     builder
-      
+
       .addCase(addUser.pending, (state) => {
         state.isLoading = true;
         state.isError = false;
@@ -71,7 +76,7 @@ export const UserSlice = createSlice({
       .addCase(addUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.message = action.payload; 
+        state.message = action.payload;
       })
       .addCase(addUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -106,10 +111,9 @@ export const UserSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       });
-      
+
   }
 });
 
-export const {logout} = UserSlice.actions;
+export const { logout, resetState } = UserSlice.actions;
 export default UserSlice.reducer;
-

@@ -10,6 +10,8 @@ import Footer from './components/Footer.js';
 import AboutUs from './components/AboutUs.js';
 import login_background from "./assets/login_background.jpg";
 import Profile from './components/Profile.js';
+import Cart from './components/Cart.js';
+import Payment from './components/Payment.js';
 
 
 function App() {
@@ -17,11 +19,11 @@ function App() {
   const email = useSelector((state) => state.users.user?.email);
 
   return (
-          <div
+    <div
       style={{
         backgroundImage: `url(${login_background})`,
         backgroundSize: "cover",
-        backgroundAttachment: "fixed",       
+        backgroundAttachment: "fixed",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         minHeight: "100vh",
@@ -32,7 +34,7 @@ function App() {
       {/* Dark overlay */}
       <div
         style={{
-          position: "fixed",                 
+          position: "fixed",
           top: 0,
           left: 0,
           width: "100%",
@@ -44,26 +46,28 @@ function App() {
       />
       {/* Main content */}
       <div style={{ position: "relative", zIndex: 2 }}>
-    <Container fluid>
-      <Router>
-        <Row>
-          {email?<Header/>:null}
-        </Row>
-        <Row>
-          <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/about" element={<AboutUs />} />
-          <Route path="/profile" element={<Profile />} />  
-        </Routes>
-        </Row>
-        <Row>
-          <Footer/>
-        </Row>
-      </Router>
-    </Container>
-    </div>
+        <Container fluid>
+          <Router>
+            <Row>
+              {email ? <Header /> : null}
+            </Row>
+            <Row>
+              <Routes>
+                <Route path="/" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/home" element={<Home />} />
+                <Route path="/about" element={<AboutUs />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/payment" element={<Payment />} />
+                <Route path="/profile" element={<Profile />} />
+              </Routes>
+            </Row>
+            <Row>
+              <Footer />
+            </Row>
+          </Router>
+        </Container>
+      </div>
     </div>
   );
 }

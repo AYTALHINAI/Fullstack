@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt';
 
 import UserModel from './models/UserModel.js';
 import PostModel from './models/Posts.js';
-import ProductModel from './models/Product.js'; 
+import ProductModel from './models/Product.js';
 
 const app = express();
 app.use(cors());
@@ -123,6 +123,7 @@ app.get("/getPost", async (req, res) => {
 app.get("/api/products", async (req, res) => { // ✅ New route
   try {
     const products = await ProductModel.find({});
+    console.log(`Found ${products.length} products`);
     const grouped = {};
     products.forEach((p) => {
       if (!grouped[p.category]) grouped[p.category] = [];

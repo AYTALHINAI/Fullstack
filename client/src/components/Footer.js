@@ -9,12 +9,12 @@ const Footer = () => {
         color: "white",
         backdropFilter: "blur(6px)",
         borderTop: "1px solid rgba(255,255,255,0.2)",
-        marginTop: "auto",        
+        marginTop: "auto",
         zIndex: 2
       }}
     >
       <p style={{ margin: 0, fontSize: "15px" }}>
-        © 2025 Cake Gallery — All Rights Reserved
+        © 2025 Freshly Baked Delights — All Rights Reserved
       </p>
     </div>
   );

@@ -20,20 +20,20 @@ const AboutUs = () => {
               {/* Heading on the left */}
               <Col md="4" className="d-flex align-items-center">
                 <h1 style={{ fontSize: "36px", fontWeight: "bold" }}>
-                  About Cake Gallery
+                  About Freshly Baked Delights
                 </h1>
               </Col>
 
               {/* Description on the right */}
               <Col md="8">
                 <p style={{ fontSize: "18px", lineHeight: "1.8" }}>
-                  Welcome to Cake Gallery, your ultimate destination for exquisite cakes and
+                  Welcome to Freshly Baked Delights, your ultimate destination for exquisite cakes and
                   pastries that delight both the eyes and the taste buds. Our passion is to
                   craft beautiful, high-quality baked goods using only the finest ingredients.
                 </p>
 
                 <p style={{ fontSize: "18px", lineHeight: "1.8" }}>
-                  Whether it’s a birthday, wedding, or any special occasion, Cake Gallery
+                  Whether it's a birthday, wedding, or any special occasion, Freshly Baked Delights
                   brings creativity, flavor, and elegance to every creation. Join us on a
                   sweet journey where art meets taste, and every bite tells a story.
                 </p>
@@ -45,7 +45,7 @@ const AboutUs = () => {
                 </p>
 
                 <p style={{ fontSize: "18px", lineHeight: "1.8" }}>
-                  At Cake Gallery, we believe every cake is more than dessert—it’s a celebration
+                  At Freshly Baked Delights, we believe every cake is more than dessert—it's a celebration
                   of life, love, and joy shared with those you care about. Let us make your
                   special moments truly memorable.
                 </p>

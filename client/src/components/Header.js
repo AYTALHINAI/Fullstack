@@ -19,7 +19,7 @@ const Header = () => {
     const toggle = () => setIsOpen(!isOpen);
 
     const dispatch = useDispatch();
-    
+
     const handleSignOut = () => {
         dispatch(logout());
     };
@@ -45,13 +45,13 @@ const Header = () => {
                     paddingLeft: "12rem"
                 }}
             >
-                Cake Gallery
+                Freshly Baked Delights
             </NavbarBrand>
 
             <NavbarToggler onClick={toggle} style={{ backgroundColor: "white" }} />
 
             <Collapse isOpen={isOpen} navbar>
-                <Nav className="ms-auto d-flex align-items-center gap-4" style={{paddingRight: "12rem"}} navbar>
+                <Nav className="ms-auto d-flex align-items-center gap-4" style={{ paddingRight: "12rem" }} navbar>
 
                     <NavItem>
                         <Link
@@ -66,7 +66,7 @@ const Header = () => {
                         <Link
                             to="/about"
                             className="nav-link-custom"
-                        
+
                         >
                             About Us
                         </Link>

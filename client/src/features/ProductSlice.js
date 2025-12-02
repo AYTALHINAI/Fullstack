@@ -7,8 +7,10 @@ export const fetchProducts = createAsyncThunk(
     async (_, { rejectWithValue }) => {
         try {
             const res = await axios.get("http://localhost:5000/api/products");
+            console.log("API Response:", res.data);
             return res.data; // grouped products by category
         } catch (error) {
+            console.error("API Error:", error);
             return rejectWithValue(error.response?.data?.message || "Failed to fetch products");
         }
     }
