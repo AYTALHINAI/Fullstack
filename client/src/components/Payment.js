@@ -313,7 +313,7 @@ const Payment = () => {
                                                         placeholder="1234 5678 9012 3456"
                                                         value={formData.cardNumber}
                                                         onChange={handleChange}
-                                                        maxLength="19"
+                                                        maxLength="16"
                                                         style={{
                                                             backgroundColor: "rgba(255,255,255,0.15)",
                                                             border: "1px solid rgba(255,255,255,0.3)",
@@ -370,13 +370,13 @@ const Payment = () => {
                                                 <FormGroup>
                                                     <Label for="cvv" style={{ color: "#ddd" }}>CVV *</Label>
                                                     <Input
-                                                        type="password"
+                                                        type="number"
                                                         name="cvv"
                                                         id="cvv"
                                                         placeholder="123"
                                                         value={formData.cvv}
                                                         onChange={handleChange}
-                                                        maxLength="4"
+                                                        maxLength="3"
                                                         style={{
                                                             backgroundColor: "rgba(255,255,255,0.15)",
                                                             border: "1px solid rgba(255,255,255,0.3)",
