@@ -7,9 +7,10 @@ import {
     NavItem
 } from "reactstrap";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../features/UserSlice";
+import { resetCart } from "../features/CartSlice";
 import "../App.css";
 
 
@@ -19,9 +20,12 @@ const Header = () => {
     const toggle = () => setIsOpen(!isOpen);
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleSignOut = () => {
         dispatch(logout());
+        dispatch(resetCart()); // Clear cart on logout
+        navigate("/");
     };
 
     return (

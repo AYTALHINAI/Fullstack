@@ -28,8 +28,11 @@ const Payment = () => {
     });
 
     useEffect(() => {
-        if (!email) navigate("/");
-        if (cartItems.length === 0) navigate("/cart");
+        if (!email) {
+            navigate("/");
+        } else if (cartItems.length === 0) {
+            navigate("/cart");
+        }
     }, [email, cartItems, navigate]);
 
     const handleChange = (e) => {
@@ -38,6 +41,37 @@ const Payment = () => {
             ...prev,
             [name]: value
         }));
+    };
+
+    // Handle phone number input (only numbers)
+    const handlePhoneChange = (e) => {
+        const value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+        setFormData(prev => ({ ...prev, phone: value }));
+    };
+
+    // Handle card number input (only numbers, formatted with spaces)
+    const handleCardNumberChange = (e) => {
+        const value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+        const formatted = value.replace(/(\d{4})(?=\d)/g, '$1 ').trim(); // Add space every 4 digits
+        setFormData(prev => ({ ...prev, cardNumber: formatted }));
+    };
+
+    // Handle CVV input (only numbers, max 4 digits)
+    const handleCVVChange = (e) => {
+        const value = e.target.value.replace(/\D/g, '').slice(0, 4); // Only digits, max 4
+        setFormData(prev => ({ ...prev, cvv: value }));
+    };
+
+    // Handle expiry date input (MM/YY format)
+    const handleExpiryChange = (e) => {
+        let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+
+        if (value.length >= 2) {
+            // Auto-format as MM/YY
+            value = value.slice(0, 2) + '/' + value.slice(2, 4);
+        }
+
+        setFormData(prev => ({ ...prev, expiryDate: value }));
     };
 
     const handleSubmit = (e) => {
@@ -74,10 +108,13 @@ const Payment = () => {
 
         // Clear cart and redirect after success
         setTimeout(() => {
-            dispatch(clearCart());
+            dispatch(clearCart(email));
             navigate("/home");
         }, 3000);
     };
+
+    // Don't render if user is not logged in
+    if (!email) return null;
 
     return (
         <Container fluid style={{ paddingTop: "6rem", paddingBottom: "4rem", position: "relative", zIndex: 2, minHeight: "80vh" }}>
@@ -161,7 +198,7 @@ const Payment = () => {
                                                 id="phone"
                                                 placeholder="+968 XXXX XXXX"
                                                 value={formData.phone}
-                                                onChange={handleChange}
+                                                onChange={handlePhoneChange}
                                                 required
                                                 style={{
                                                     backgroundColor: "rgba(255,255,255,0.15)",
@@ -270,7 +307,7 @@ const Payment = () => {
                                                 <FormGroup>
                                                     <Label for="cardNumber" style={{ color: "#ddd" }}>Card Number *</Label>
                                                     <Input
-                                                        type="text"
+                                                        type="number"
                                                         name="cardNumber"
                                                         id="cardNumber"
                                                         placeholder="1234 5678 9012 3456"
@@ -292,7 +329,7 @@ const Payment = () => {
                                                 <FormGroup>
                                                     <Label for="cardName" style={{ color: "#ddd" }}>Cardholder Name *</Label>
                                                     <Input
-                                                        type="text"
+                                                        type="text "
                                                         name="cardName"
                                                         id="cardName"
                                                         placeholder="Name on card"
@@ -313,7 +350,7 @@ const Payment = () => {
                                                 <FormGroup>
                                                     <Label for="expiryDate" style={{ color: "#ddd" }}>Expiry Date *</Label>
                                                     <Input
-                                                        type="text"
+                                                        type="date"
                                                         name="expiryDate"
                                                         id="expiryDate"
                                                         placeholder="MM/YY"

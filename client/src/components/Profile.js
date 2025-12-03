@@ -1,20 +1,40 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { Col, Row, Container, Input, Button } from 'reactstrap';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { updateProfile } from '../features/UserSlice';
 
 const Profile = () => {
   const dispatch = useDispatch();
-  const { uname, email, profilepic } = useSelector((state) => state.users.user);
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.users.user);
 
-  const [newName, setNewName] = useState(uname || "");
+  // Safe destructuring with defaults
+  const { uname = "", email = "", profilepic = "" } = user || {};
+
+  const [newName, setNewName] = useState(uname);
   const [successMsg, setSuccessMsg] = useState("");
+
+  // Redirect if not logged in
+  useEffect(() => {
+    if (!user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
+
+  // Update newName when uname changes
+  useEffect(() => {
+    setNewName(uname);
+  }, [uname]);
 
   const handleUpdate = async () => {
     if (!newName.trim()) return;
     const res = await dispatch(updateProfile({ email, uname: newName }));
     if (res?.payload?.user) setSuccessMsg("Profile updated!");
   };
+
+  // Don't render if user is not logged in
+  if (!user) return null;
 
   return (
     <Container fluid>

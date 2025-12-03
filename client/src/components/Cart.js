@@ -1,7 +1,7 @@
 import { Container, Row, Col, Button, Card, CardBody, CardImg, CardTitle, CardText } from "reactstrap";
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from "react-router-dom";
-import { removeFromCart, incrementQuantity, decrementQuantity, clearCart } from "../features/CartSlice";
+import { fetchCart, removeFromCart, updateCartQuantity, clearCart } from "../features/CartSlice";
 import { useEffect } from "react";
 
 const Cart = () => {
@@ -14,23 +14,28 @@ const Cart = () => {
     const totalPrice = useSelector((state) => state.cart.totalPrice);
 
     useEffect(() => {
-        if (!email) navigate("/");
-    }, [email, navigate]);
+        if (!email) {
+            navigate("/");
+        } else {
+            // Fetch user's cart from backend
+            dispatch(fetchCart(email));
+        }
+    }, [email, navigate, dispatch]);
 
     const handleRemove = (id) => {
-        dispatch(removeFromCart(id));
+        dispatch(removeFromCart({ email, productId: id }));
     };
 
     const handleIncrement = (id) => {
-        dispatch(incrementQuantity(id));
+        dispatch(updateCartQuantity({ email, productId: id, action: 'increment' }));
     };
 
     const handleDecrement = (id) => {
-        dispatch(decrementQuantity(id));
+        dispatch(updateCartQuantity({ email, productId: id, action: 'decrement' }));
     };
 
     const handleClearCart = () => {
-        dispatch(clearCart());
+        dispatch(clearCart(email));
     };
 
     return (

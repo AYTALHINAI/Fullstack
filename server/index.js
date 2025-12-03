@@ -6,6 +6,7 @@ import bcrypt from 'bcrypt';
 import UserModel from './models/UserModel.js';
 import PostModel from './models/Posts.js';
 import ProductModel from './models/Product.js';
+import CartModel from './models/Cart.js';
 
 const app = express();
 app.use(cors());
@@ -138,3 +139,134 @@ app.get("/api/products", async (req, res) => { // ✅ New route
     res.status(500).json({ message: "Server error", error: String(error) });
   }
 });
+
+// ==================== CART ENDPOINTS ====================
+
+// GET USER CART
+app.get("/api/cart/:email", async (req, res) => {
+  try {
+    const { email } = req.params;
+    let cart = await CartModel.findOne({ email });
+
+    if (!cart) {
+      // Create empty cart if doesn't exist
+      cart = new CartModel({ email, items: [], totalItems: 0, totalPrice: 0 });
+      await cart.save();
+    }
+
+    res.status(200).json(cart);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: String(error) });
+  }
+});
+
+// ADD ITEM TO CART
+app.post("/api/cart/add", async (req, res) => {
+  try {
+    const { email, item } = req.body;
+
+    let cart = await CartModel.findOne({ email });
+
+    if (!cart) {
+      cart = new CartModel({ email, items: [], totalItems: 0, totalPrice: 0 });
+    }
+
+    // Check if item already exists
+    const existingItemIndex = cart.items.findIndex(i => i.productId === item.id);
+
+    if (existingItemIndex > -1) {
+      // Increment quantity
+      cart.items[existingItemIndex].quantity += 1;
+    } else {
+      // Add new item
+      cart.items.push({
+        productId: item.id,
+        name: item.name,
+        price: item.price,
+        img: item.img,
+        category: item.category,
+        quantity: 1
+      });
+    }
+
+    // Recalculate totals
+    cart.totalItems = cart.items.reduce((sum, i) => sum + i.quantity, 0);
+    cart.totalPrice = cart.items.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+
+    await cart.save();
+    res.status(200).json(cart);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: String(error) });
+  }
+});
+
+// UPDATE ITEM QUANTITY
+app.put("/api/cart/update", async (req, res) => {
+  try {
+    const { email, productId, action } = req.body; // action: 'increment' or 'decrement'
+
+    const cart = await CartModel.findOne({ email });
+    if (!cart) return res.status(404).json({ message: "Cart not found" });
+
+    const itemIndex = cart.items.findIndex(i => i.productId === productId);
+    if (itemIndex === -1) return res.status(404).json({ message: "Item not found" });
+
+    if (action === 'increment') {
+      cart.items[itemIndex].quantity += 1;
+    } else if (action === 'decrement') {
+      if (cart.items[itemIndex].quantity > 1) {
+        cart.items[itemIndex].quantity -= 1;
+      }
+    }
+
+    // Recalculate totals
+    cart.totalItems = cart.items.reduce((sum, i) => sum + i.quantity, 0);
+    cart.totalPrice = cart.items.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+
+    await cart.save();
+    res.status(200).json(cart);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: String(error) });
+  }
+});
+
+// REMOVE ITEM FROM CART
+app.delete("/api/cart/remove", async (req, res) => {
+  try {
+    const { email, productId } = req.body;
+
+    const cart = await CartModel.findOne({ email });
+    if (!cart) return res.status(404).json({ message: "Cart not found" });
+
+    cart.items = cart.items.filter(i => i.productId !== productId);
+
+    // Recalculate totals
+    cart.totalItems = cart.items.reduce((sum, i) => sum + i.quantity, 0);
+    cart.totalPrice = cart.items.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+
+    await cart.save();
+    res.status(200).json(cart);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: String(error) });
+  }
+});
+
+// CLEAR CART
+app.delete("/api/cart/clear/:email", async (req, res) => {
+  try {
+    const { email } = req.params;
+
+    const cart = await CartModel.findOne({ email });
+    if (!cart) return res.status(404).json({ message: "Cart not found" });
+
+    cart.items = [];
+    cart.totalItems = 0;
+    cart.totalPrice = 0;
+
+    await cart.save();
+    res.status(200).json(cart);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: String(error) });
+  }
+});
+

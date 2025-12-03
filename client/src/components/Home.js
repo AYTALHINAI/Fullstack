@@ -18,9 +18,17 @@ const Home = () => {
   console.log("Home Render:", { products, selectedCategory, isLoading, isError, message });
 
   useEffect(() => {
-    if (!email) navigate("/");
-    else dispatch(fetchProducts()); // fetch products on load
+    if (email) {
+      dispatch(fetchProducts()); // fetch products on load
+    }
   }, [email, dispatch]);
+
+  // Redirect if not logged in
+  useEffect(() => {
+    if (!email) {
+      navigate("/");
+    }
+  }, [email, navigate]);
 
   const toggleCategory = (cat) => {
     if (selectedCategory === cat) setSelectedCategory(null);
@@ -28,7 +36,7 @@ const Home = () => {
   };
 
   const handleAddToCart = (item) => {
-    dispatch(addToCart(item));
+    dispatch(addToCart({ email, item }));
     toast.success('Added to Cart!', {
       position: "top-right",
       autoClose: 2000,
@@ -39,6 +47,7 @@ const Home = () => {
     });
   };
 
+  if (!email) return null; // Don't render anything if not logged in
   if (isLoading) return <div style={{ color: "white", textAlign: "center", marginTop: "5rem" }}>Loading products...</div>;
   if (isError) return <div style={{ color: "red", textAlign: "center", marginTop: "5rem" }}>Error: {message}</div>;
 
