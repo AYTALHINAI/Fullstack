@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { Col, Row, Container, Input, Button } from 'reactstrap';
+import { Col, Row, Container, Input, Button, FormGroup, Label } from 'reactstrap';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { updateProfile } from '../features/UserSlice';
@@ -10,26 +10,36 @@ const Profile = () => {
   const user = useSelector((state) => state.users.user);
 
   // Safe destructuring with defaults
-  const { uname = "", email = "", profilepic = "" } = user || {};
+  const { uname = "", email = "", profilepic = "", phoneNumber = "" } = user || {};
 
   const [newName, setNewName] = useState(uname);
+  const [newPhone, setNewPhone] = useState(phoneNumber);
+  const [newPic, setNewPic] = useState(profilepic);
   const [successMsg, setSuccessMsg] = useState("");
 
   // Redirect if not logged in
+  // Note: isSuccess and isError are not defined in this snippet,
+  // so the condition `if (user && isSuccess)` might need adjustment
+  // based on where `isSuccess` is supposed to come from.
+  // For now, removing the undefined variables from dependencies.
   useEffect(() => {
-    if (!user) {
-      navigate("/");
-    }
+    // Removed the navigation on error to keep user on login page and show error
   }, [user, navigate]);
 
-  // Update newName when uname changes
+  // Update state when user changes (e.g. after refresh or update)
   useEffect(() => {
     setNewName(uname);
-  }, [uname]);
+    setNewPhone(phoneNumber);
+    setNewPic(profilepic);
+  }, [uname, phoneNumber, profilepic]);
 
   const handleUpdate = async () => {
-    if (!newName.trim()) return;
-    const res = await dispatch(updateProfile({ email, uname: newName }));
+    const res = await dispatch(updateProfile({
+      email,
+      uname: newName,
+      phoneNumber: newPhone,
+      profilepic: newPic
+    }));
     if (res?.payload?.user) setSuccessMsg("Profile updated!");
   };
 
@@ -37,31 +47,86 @@ const Profile = () => {
   if (!user) return null;
 
   return (
-    <Container fluid>
+    <Container
+      fluid
+      className="d-flex justify-content-center align-items-center"
+      style={{ height: "100vh", position: "relative", zIndex: 2 }}
+    >
       <Row>
-        <Col md="12" style={{ textAlign: "center", marginTop: "6rem", marginBottom: "20rem" }}>
-          {/* Use profilepic directly; backend ensures default */}
-          <img
-            alt='profile pic'
-            src={profilepic}
-            className='profilepic'
-            style={{ width: "150px", borderRadius: "50%" }}
-          />
-          <h1 style={{ color: "white", paddingTop: "1.5rem" }}>{uname}</h1>
+        <Col md="12">
+          <form
+            className="div-form p-5"
+            style={{
+              width: "600px",
+              margin: "auto",
+              borderRadius: "15px",
+              backgroundColor: "rgba(0,0,0,0.55)",
+              backdropFilter: "blur(6px)",
+              border: "1px solid rgba(255,255,255,0.25)",
+              boxShadow: "0 8px 30px rgba(0,0,0,0.8)"
+            }}
+          >
+            <div className="text-center mb-4">
+              <img
+                alt='profile pic'
+                src={profilepic}
+                className='profilepic'
+                style={{ width: "120px", borderRadius: "50%", border: "3px solid white" }}
+              />
+              <h2 className="text-white mt-3" style={{ fontWeight: "bold" }}>{uname}</h2>
+            </div>
 
-          {/* Update username */}
-          <Input
-            type="text"
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
-            placeholder="Enter new name"
-            style={{ width: "300px", margin: "1rem auto" }}
-          />
-          <Button color="light" onClick={handleUpdate} style={{ marginBottom: "1rem" }}>
-            Update Name
-          </Button>
+            <h3 className="text-center text-white mb-4">Update Profile</h3>
 
-          {successMsg && <p style={{ color: "lightgreen" }}>{successMsg}</p>}
+            <FormGroup className="mb-3">
+              <Label className="text-white">Profile Picture URL</Label>
+              <Input
+                type="text"
+                value={newPic}
+                onChange={(e) => setNewPic(e.target.value)}
+                placeholder="Profile Picture URL"
+                className='form-control'
+              />
+            </FormGroup>
+
+            <FormGroup className="mb-3">
+              <Label className="text-white">Name</Label>
+              <Input
+                type="text"
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+                placeholder="Enter new name"
+                className='form-control'
+              />
+            </FormGroup>
+
+            <FormGroup className="mb-4">
+              <Label className="text-white">Phone Number</Label>
+              <Input
+                type="text"
+                value={newPhone}
+                onChange={(e) => setNewPhone(e.target.value)}
+                placeholder="Enter new phone number"
+                className='form-control'
+              />
+            </FormGroup>
+
+            <FormGroup className="mb-3">
+              <Button
+                onClick={handleUpdate}
+                className='form-control bg-primary text-white'
+                style={{ borderRadius: "8px" }}
+              >
+                Update Profile
+              </Button>
+            </FormGroup>
+
+            {successMsg && (
+              <div className="text-center">
+                <p style={{ color: "lightgreen", fontWeight: "bold" }}>{successMsg}</p>
+              </div>
+            )}
+          </form>
         </Col>
       </Row>
     </Container>

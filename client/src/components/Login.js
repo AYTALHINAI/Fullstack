@@ -1,9 +1,8 @@
 import { Container, Row, Col, FormGroup, Label, Input, Button } from 'reactstrap';
-import login_background from "../assets/login_background.jpg";
 import { UserSchemaValidation } from '../validations/userSchemaValidation';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getUser } from '../features/UserSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,8 +10,6 @@ import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
 
-    let [email, setEmail] = useState('');
-    let [password, setPassword] = useState('');
     const dispatch = useDispatch();
     const user = useSelector((state) => state.users.user);
     const isSuccess = useSelector((state) => state.users.isSuccess);
@@ -25,11 +22,7 @@ const Login = () => {
         formState: { errors }
     } = useForm({ resolver: yupResolver(UserSchemaValidation) });
 
-    const validate = () => {
-        const data = {
-            email: email,
-            password: password,
-        }
+    const submitHandler = (data) => {
         dispatch(getUser(data));
     }
 
@@ -38,7 +31,7 @@ const Login = () => {
             navigate("/home");
         if (isError)
             navigate("/");
-    }, [user, isSuccess, isError]);
+    }, [user, isSuccess, isError, navigate]);
 
     return (
         <Container
@@ -62,21 +55,18 @@ const Login = () => {
                     >
                         <h1 className="text-center text-white mb-4" style={{
                             fontWeight: "bold",
-                            fontSize: "28px",
+                            fontSize: "40px",
                             color: "white",
                             letterSpacing: "1px",
                             paddingBottom: "2rem"
                         }}>
-                            Freshly Baked Delights
+                            Sign In
                         </h1>
 
                         <FormGroup className="mb-4">
                             <Label className='text-white'>Email</Label>
                             <input
-                                {...register('email', {
-                                    value: email,
-                                    onChange: (e) => setEmail(e.target.value)
-                                })}
+                                {...register('email')}
                                 placeholder='Enter your Email'
                                 type='email'
                                 className='form-control'
@@ -87,10 +77,7 @@ const Login = () => {
                         <FormGroup className="mb-4">
                             <Label className='text-white'>Password</Label>
                             <input
-                                {...register('password', {
-                                    value: password,
-                                    onChange: (e) => setPassword(e.target.value)
-                                })}
+                                {...register('password')}
                                 placeholder='Enter your Password'
                                 type='password'
                                 className='form-control'
@@ -98,14 +85,14 @@ const Login = () => {
                             <p style={{ color: 'red' }}>{errors.password?.message}</p>
                         </FormGroup>
 
-                        <FormGroup className="d-flex align-items-center mb-4">
+                        {/* <FormGroup className="d-flex align-items-center mb-4">
                             <Input type='checkbox' />
                             <Label className="ms-2 text-white">Remember Me</Label>
-                        </FormGroup>
+                        </FormGroup> */}
 
                         <FormGroup className="mb-4">
                             <Button
-                                onClick={submitForm(validate)}
+                                onClick={submitForm(submitHandler)}
                                 className='form-control bg-primary text-white'
                                 style={{ borderRadius: "8px" }}
                             >
@@ -113,9 +100,11 @@ const Login = () => {
                             </Button>
                         </FormGroup>
 
-                        {/* <FormGroup className='text-center text-white mb-2'>
-                                <Label>Forget password</Label>
-                            </FormGroup> */}
+                        {isError && (
+                            <div className="text-center mb-3">
+                                <p style={{ color: "red", fontWeight: "bold" }}>{isError && "Username or Password is incorrect"}</p>
+                            </div>
+                        )}
 
                         <FormGroup className='text-center text-white'>
                             <Label>No Account? <Link to='/register'>Sign Up Now...</Link></Label>

@@ -7,9 +7,10 @@ const UserSchema = mongoose.Schema({
     profilepic: {
         type: String,
         required: false,
-        default: "https://icon-library.com/images/profiles-icon/profiles-icon-0.jpg" 
+        default: "https://icon-library.com/images/profiles-icon/profiles-icon-0.jpg"
     },
+    phoneNumber: { type: String, required: true },
 });
 
-const UserModel=mongoose.model("users",UserSchema);
+const UserModel = mongoose.model("users", UserSchema);
 export default UserModel;

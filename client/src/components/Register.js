@@ -12,10 +12,11 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [uname, setuname] = useState("");
+  const [phone, setPhone] = useState("");
   const [pic, setPic] = useState("");
 
   const dispatch = useDispatch();
-  const { message, isLoading } = useSelector((state) => state.users);
+  const { message, isLoading, isError } = useSelector((state) => state.users);
   const navigate = useNavigate();
 
   const {
@@ -25,7 +26,7 @@ const Register = () => {
   } = useForm({ resolver: yupResolver(UserRegisterSchemaValidation) });
 
   const validate = async () => {
-    const data = { uname, email, password, profilepic: pic };
+    const data = { uname, email, password, profilepic: pic, phoneNumber: phone };
     const result = await dispatch(addUser(data));
 
     if (addUser.fulfilled.match(result) && result.payload === "Success") {
@@ -70,6 +71,20 @@ const Register = () => {
                 className="form-control"
               />
               <p style={{ color: "red" }}>{errors.uname?.message}</p>
+            </FormGroup>
+
+            <FormGroup className="mb-4">
+              <Label className="text-white">Phone</Label>
+              <input
+                {...register("phone", {
+                  value: phone,
+                  onChange: (e) => setPhone(e.target.value),
+                })}
+                placeholder="Enter your phone number"
+                type="text"
+                className="form-control"
+              />
+              <p style={{ color: "red" }}>{errors.phone?.message}</p>
             </FormGroup>
 
 
@@ -135,14 +150,7 @@ const Register = () => {
 
 
             <FormGroup className="text-center">
-              <p
-                style={{
-                  color: message === "Success" ? "lightgreen" : "red",
-                  fontWeight: "bold",
-                }}
-              >
-                {message}
-              </p>
+              {isError && <p style={{ color: "red", fontWeight: "bold" }}>{message}</p>}
             </FormGroup>
           </form>
         </Col>

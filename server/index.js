@@ -46,7 +46,7 @@ app.post("/login", async (req, res) => {
 // ---------------- REGISTER ----------------
 app.post("/register", async (req, res) => {
   try {
-    const { uname, email, password, profilepic } = req.body;
+    const { uname, email, password, profilepic, phoneNumber } = req.body;
 
     const exists = await UserModel.findOne({ email });
     if (exists) return res.status(409).json({ message: "User already exists" });
@@ -57,7 +57,8 @@ app.post("/register", async (req, res) => {
       uname,
       email,
       password: hash_password,
-      profilepic: profilepic || "https://icon-library.com/images/profiles-icon/profiles-icon-0.jpg"
+      profilepic: profilepic || "https://icon-library.com/images/profiles-icon/profiles-icon-0.jpg",
+      phoneNumber
     });
 
     await new_user.save();
@@ -72,13 +73,18 @@ app.post("/register", async (req, res) => {
 // ==================== UPDATE USER PROFILE ====================
 app.put("/updateProfile", async (req, res) => {
   try {
-    const { email, uname } = req.body;
+    const { email, uname, phoneNumber, profilepic } = req.body;
 
-    if (!email || !uname) return res.status(400).json({ message: "Missing data" });
+    if (!email) return res.status(400).json({ message: "Missing email" });
+
+    const updates = {};
+    if (uname) updates.uname = uname;
+    if (phoneNumber) updates.phoneNumber = phoneNumber;
+    if (profilepic) updates.profilepic = profilepic;
 
     const updatedUser = await UserModel.findOneAndUpdate(
       { email },
-      { uname },
+      updates,
       { new: true } // return the updated document
     );
 
