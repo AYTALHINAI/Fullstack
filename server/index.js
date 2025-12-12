@@ -8,7 +8,7 @@ import PostModel from './models/Posts.js';
 import ProductModel from './models/Product.js';
 import CartModel from './models/Cart.js';
 
-const app = express();
+export const app = express();
 app.use(cors());
 app.use(express.json());
 
@@ -22,9 +22,11 @@ try {
 }
 
 // ---------------- SERVER ----------------
-app.listen(5000, () => {
-  console.log("Server connected at port number 5000..");
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(5000, () => {
+    console.log("Server connected at port number 5000..");
+  });
+}
 
 // ---------------- LOGIN ----------------
 app.post("/login", async (req, res) => {
