@@ -49,31 +49,7 @@ const Payment = () => {
         setFormData(prev => ({ ...prev, phone: value }));
     };
 
-    // // Handle card number input (only numbers, formatted with spaces)
-    // const handleCardNumberChange = (e) => {
-    //     const value = e.target.value.replace(/\D/g, ''); // Remove non-digits
-    //     const formatted = value.replace(/(\d{4})(?=\d)/g, '$1 ').trim(); // Add space every 4 digits
-    //     setFormData(prev => ({ ...prev, cardNumber: formatted }));
-    // };
-
-    // // Handle CVV input (only numbers, max 4 digits)
-    // const handleCVVChange = (e) => {
-    //     const value = e.target.value.replace(/\D/g, '').slice(0, 4); // Only digits, max 4
-    //     setFormData(prev => ({ ...prev, cvv: value }));
-    // };
-
-    // // Handle expiry date input (MM/YY format)
-    // const handleExpiryChange = (e) => {
-    //     let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
-
-    //     if (value.length >= 2) {
-    //         // Auto-format as MM/YY
-    //         value = value.slice(0, 2) + '/' + value.slice(2, 4);
-    //     }
-
-    //     setFormData(prev => ({ ...prev, expiryDate: value }));
-    // };
-
+    
     const handleSubmit = (e) => {
         e.preventDefault();
 

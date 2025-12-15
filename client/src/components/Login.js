@@ -1,4 +1,4 @@
-import { Container, Row, Col, FormGroup, Label, Input, Button } from 'reactstrap';
+import { Container, Row, Col, FormGroup, Label, Button } from 'reactstrap';
 import { UserSchemaValidation } from '../validations/userSchemaValidation';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -84,11 +84,6 @@ const Login = () => {
                             />
                             <p style={{ color: 'red' }}>{errors.password?.message}</p>
                         </FormGroup>
-
-                        {/* <FormGroup className="d-flex align-items-center mb-4">
-                            <Input type='checkbox' />
-                            <Label className="ms-2 text-white">Remember Me</Label>
-                        </FormGroup> */}
 
                         <FormGroup className="mb-4">
                             <Button

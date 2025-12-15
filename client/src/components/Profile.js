@@ -17,11 +17,7 @@ const Profile = () => {
   const [newPic, setNewPic] = useState(profilepic);
   const [successMsg, setSuccessMsg] = useState("");
 
-  // Redirect if not logged in
-  // Note: isSuccess and isError are not defined in this snippet,
-  // so the condition `if (user && isSuccess)` might need adjustment
-  // based on where `isSuccess` is supposed to come from.
-  // For now, removing the undefined variables from dependencies.
+  
   useEffect(() => {
     // Removed the navigation on error to keep user on login page and show error
   }, [user, navigate]);

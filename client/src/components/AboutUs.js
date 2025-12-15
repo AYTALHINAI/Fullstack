@@ -17,14 +17,14 @@ const AboutUs = () => {
             }}
           >
             <Row>
-              {/* Heading on the left */}
+              
               <Col md="4" className="d-flex align-items-center">
                 <h1 style={{ fontSize: "36px", fontWeight: "bold" }}>
                   About Freshly Baked Delights
                 </h1>
               </Col>
 
-              {/* Description on the right */}
+
               <Col md="8">
                 <p style={{ fontSize: "18px", lineHeight: "1.8" }}>
                   Welcome to Freshly Baked Delights, your ultimate destination for exquisite cakes and

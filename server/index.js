@@ -4,7 +4,6 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 
 import UserModel from './models/UserModel.js';
-import PostModel from './models/Posts.js';
 import ProductModel from './models/Product.js';
 import CartModel from './models/Cart.js';
 
@@ -96,40 +95,12 @@ app.put("/updateProfile", async (req, res) => {
   }
 });
 
-// ---------------- SAVE POST ----------------
-app.post("/savePost", async (req, res) => {
-  try {
-    const { postMsg, email, lat, lng } = req.body;
-    const new_post = new PostModel({ postMsg, email, lat, lng });
-    await new_post.save();
-    res.status(200).json({ message: "Success" });
-  } catch (error) {
-    res.send(error);
-  }
-});
 
-// ---------------- GET POSTS ----------------
-app.get("/getPost", async (req, res) => {
-  try {
-    const postswithUser = await PostModel.aggregate([
-      {
-        $lookup: {
-          from: "users",
-          localField: "email",
-          foreignField: "email",
-          as: "user",
-        }
-      },
-      { $sort: { createdAt: -1 } }
-    ]);
-    res.json({ posts: postswithUser });
-  } catch (error) {
-    res.send(error);
-  }
-});
+
+
 
 // ---------------- GET PRODUCTS ----------------
-app.get("/api/products", async (req, res) => { // ✅ New route
+app.get("/api/products", async (req, res) => { 
   try {
     const products = await ProductModel.find({});
     console.log(`Found ${products.length} products`);
